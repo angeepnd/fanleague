@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fan League — Your game, amplified</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --indigo-deep: #0d0c26;
+    --indigo-mid: #1a1840;
+    --purple: #4a47a3;
+    --purple-light: #6c69c8;
+    --purple-pale: #f0efff;
+    --off-white: #f8f8fc;
+    --white: #ffffff;
+    --text-primary: #1e1e3a;
+    --text-muted: #6868a0;
+    --border: #e2e2f0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--off-white);
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,12,38,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: -0.3px;
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .nav-logo-dot { width: 8px; height: 8px; background: var(--purple-light); border-radius: 50%; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { color: rgba(255,255,255,0.65); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta {
+    background: var(--purple);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--purple-light); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--indigo-deep);
+    display: flex; align-items: center;
+    padding: 100px 5% 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(74,71,163,0.35) 0%, transparent 70%);
+    top: 50%; left: 30%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    position: relative; z-index: 1;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(74,71,163,0.3);
+    border: 0.5px solid rgba(108,105,200,0.5);
+    color: #a0a0e8;
+    font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px; border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .live-dot { width: 6px; height: 6px; background: #ff4a4a; border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+  .hero-h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(42px, 5.5vw, 72px);
+    line-height: 1.0;
+    letter-spacing: -2px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+  .hero-h1 span { color: var(--purple-light); }
+  .hero-p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.6);
+    max-width: 440px;
+    margin-bottom: 40px;
+  }
+  .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--purple);
+    color: #fff;
+    font-size: 15px; font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--purple-light); transform: translateY(-1px); }
+  .btn-ghost {
+    color: rgba(255,255,255,0.65);
+    font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: #fff; }
+  .btn-ghost svg { transition: transform 0.2s; }
+  .btn-ghost:hover svg { transform: translateX(3px); }
+  .hero-stats {
+    display: flex; gap: 32px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 0.5px solid rgba(255,255,255,0.1);
+  }
+  .hero-stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 28px;
+    color: #fff;
+  }
+  .hero-stat-lbl { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+  /* PHONE MOCKUP */
+  .phone-wrap { display: flex; justify-content: center; align-items: center; }
+  .phone-frame {
+    width: 240px;
+    background: #12122a;
+    border-radius: 40px;
+    padding: 10px;
+    border: 2px solid #2a2a4a;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+    transform: perspective(1200px) rotateY(-8deg) rotateX(2deg);
+  }
+  .phone-inner {
+    background: #f8f8fc;
+    border-radius: 32px;
+    overflow: hidden;
+    height: 480px;
+    display: flex; flex-direction: column;
+  }
+  .ph-notch { background: #f8f8fc; height: 18px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 2px; }
+  .ph-notch-pill { width: 60px; height: 12px; background: #12122a; border-radius: 0 0 8px 8px; }
+  .ph-header { background: #4a47a3; padding: 10px 12px 9px; display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+  .ph-hicon { width: 26px; height: 26px; background: rgba(255,255,255,0.18); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .ph-htitle { color: #fff; font-size: 12px; font-weight: 600; }
+  .ph-hsub { color: rgba(255,255,255,0.6); font-size: 9px; margin-top: 1px; }
+  .ph-badge { margin-left: auto; background: rgba(255,255,255,0.2); color: #fff; font-size: 7.5px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+  .ph-body { flex: 1; overflow: hidden; padding: 10px 11px; display: flex; flex-direction: column; gap: 7px; }
+  .ph-ai-card { background: #4a47a3; border-radius: 9px; padding: 9px 10px; }
+  .ph-ai-title { color: #fff; font-size: 10px; font-weight: 600; margin-bottom: 3px; }
+  .ph-ai-sub { color: rgba(255,255,255,0.72); font-size: 8.5px; line-height: 1.4; }
+  .ph-ai-tag { display: inline-block; background: rgba(255,255,255,0.18); color: #fff; font-size: 7.5px; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
+  .ph-slabel { font-size: 7.5px; font-weight: 700; color: #9090b0; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 2px; }
+  .ph-card { background: #fff; border-radius: 8px; padding: 8px 9px; border: 0.5px solid #e2e2f0; }
+  .ph-ct { font-size: 9.5px; font-weight: 600; color: #1e1e3a; margin-bottom: 2px; }
+  .ph-cs { font-size: 8px; color: #6868a0; line-height: 1.35; }
+  .ph-pill { display: inline-block; background: #f0efff; color: #4a47a3; font-size: 7.5px; font-weight: 600; padding: 2px 6px; border-radius: 20px; margin-top: 3px; }
+  .ph-pill-red { background: #fff0f0; color: #c03030; }
+  .ph-tabs { display: flex; background: #fff; border-top: 0.5px solid #e2e2f0; padding: 5px 0 4px; flex-shrink: 0; }
+  .ph-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .ph-tab span { font-size: 13px; }
+  .ph-tab small { font-size: 6.5px; color: #9090b0; }
+  .ph-tab.on small { color: #4a47a3; font-weight: 600; }
+
+  /* TICKER */
+  .ticker {
+    background: var(--purple);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex; gap: 48px;
+    animation: ticker 30s linear infinite;
+  }
+  @keyframes ticker { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+  .ticker-item {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: rgba(255,255,255,0.9);
+    font-size: 13px; font-weight: 500;
+  }
+  .ticker-item strong { color: #fff; }
+  .ticker-sep { color: rgba(255,255,255,0.3); font-size: 18px; }
+
+  /* FEATURES */
+  .features { background: var(--off-white); }
+
+  .feature-section {
+    max-width: 1200px; margin: 0 auto;
+    padding: 100px 5%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .feature-section.flip { direction: rtl; }
+  .feature-section.flip > * { direction: ltr; }
+
+  .feat-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--purple);
+    margin-bottom: 16px;
+  }
+  .feat-h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(28px, 3.5vw, 44px);
+    line-height: 1.1; letter-spacing: -1px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+  .feat-h2 em { font-style: normal; color: var(--purple); }
+  .feat-p { font-size: 16px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
+
+  .feat-bullets { display: flex; flex-direction: column; gap: 12px; }
+  .feat-bullet {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .feat-bullet-dot {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--purple-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 1px;
+  }
+  .feat-bullet-text { font-size: 14px; line-height: 1.5; color: var(--text-primary); }
+  .feat-bullet-text strong { font-weight: 600; }
+
+  .feat-visual {
+    background: var(--indigo-deep);
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .feat-visual::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(74,71,163,0.4) 0%, transparent 70%);
+    top: -80px; right: -80px;
+    pointer-events: none;
+  }
+
+  /* Forum visual */
+  .forum-stat-row { display: flex; gap: 8px; }
+  .forum-stat { flex: 1; background: rgba(255,255,255,0.07); border-radius: 8px; padding: 8px 10px; text-align: center; border: 0.5px solid rgba(255,255,255,0.08); }
+  .forum-stat-num { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
+  .forum-stat-lbl { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .forum-bubble { background: rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 12px; border: 0.5px solid rgba(255,255,255,0.08); }
+  .forum-bubble.athlete { background: rgba(74,71,163,0.35); border-color: rgba(108,105,200,0.4); }
+  .fb-header { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+  .fb-av { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; }
+  .fb-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .fb-name.athlete { color: #a0a0e8; }
+  .fb-time { font-size: 8px; color: rgba(255,255,255,0.35); margin-left: auto; }
+  .fb-text { font-size: 9px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+  .fb-reacts { display: flex; gap: 5px; margin-top: 6px; }
+  .fb-rx { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 2px 8px; font-size: 8px; color: rgba(255,255,255,0.7); }
+  .fb-rx.accent { background: rgba(74,71,163,0.6); color: #d0d0ff; }
+
+  /* Mission visual */
+  .mission-pts-banner {
+    background: rgba(240,180,40,0.12);
+    border: 0.5px solid rgba(240,180,40,0.3);
+    border-radius: 10px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .m-pts-num { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: #f0b429; }
+  .m-pts-lbl { font-size: 10px; color: rgba(240,180,40,0.7); }
+  .m-tier { margin-left: auto; text-align: right; }
+  .m-tier-name { font-size: 10px; font-weight: 600; color: #f0b429; }
+  .m-tier-sub { font-size: 8.5px; color: rgba(240,180,40,0.5); margin-top: 1px; }
+  .m-xpbar { height: 4px; background: rgba(240,180,40,0.15); border-radius: 4px; margin-top: 5px; width: 80px; overflow: hidden; }
+  .m-xpfill { height: 100%; background: #f0b429; border-radius: 4px; }
+  .mission-card-visual { background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.08); }
+  .mc-head { padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .mc-title { color: #fff; font-size: 11px; font-weight: 600; }
+  .mc-pts { color: rgba(255,255,255,0.8); font-size: 8.5px; background: rgba(255,255,255,0.15); padding: 2px 7px; border-radius: 8px; }
+  .mc-body { padding: 8px 12px; }
+  .mc-sub { font-size: 9px; color: rgba(255,255,255,0.45); }
+  .mc-pbar { height: 3px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 6px; overflow: hidden; }
+  .mc-pfill { height: 100%; border-radius: 4px; }
+  .mc-action { font-size: 8.5px; margin-top: 4px; font-weight: 500; }
+
+  /* DIVIDER between sections */
+  .section-divider {
+    border: none;
+    height: 0.5px;
+    background: var(--border);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* SOCIAL PROOF */
+  .social-section {
+    background: var(--indigo-deep);
+    padding: 80px 5%;
+    text-align: center;
+  }
+  .social-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+  .social-h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(28px, 4vw, 52px);
+    letter-spacing: -1.5px; color: #fff;
+    margin-bottom: 60px;
+  }
+  .social-h2 span { color: var(--purple-light); }
+  .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 0 auto 60px; }
+  .social-card {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px;
+    text-align: left;
+  }
+  .social-quote { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+  .social-author { display: flex; align-items: center; gap: 8px; }
+  .social-av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .social-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .social-handle { font-size: 11px; color: rgba(255,255,255,0.4); }
+  .social-numbers { display: flex; justify-content: center; gap: 64px; }
+  .social-num { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: #fff; text-align: center; }
+  .social-num-lbl { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 4px; text-align: center; }
+
+  /* CTA */
+  .cta-section {
+    background: var(--off-white);
+    padding: 100px 5%;
+    text-align: center;
+  }
+  .cta-inner {
+    background: var(--purple);
+    border-radius: 24px;
+    padding: 72px 40px;
+    max-width: 800px; margin: 0 auto;
+    position: relative; overflow: hidden;
+  }
+  .cta-inner::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+  }
+  .cta-h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(30px, 4vw, 52px);
+    letter-spacing: -1.5px; color: #fff;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .cta-p { font-size: 16px; color: rgba(255,255,255,0.65); margin-bottom: 36px; position: relative; }
+  .cta-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; position: relative; }
+  .btn-white {
+    background: #fff; color: var(--purple);
+    font-size: 15px; font-weight: 600;
+    padding: 14px 28px; border-radius: 10px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-white:hover { opacity: 0.92; transform: translateY(-1px); }
+  .btn-outline-white {
+    background: transparent; color: #fff;
+    font-size: 15px; font-weight: 500;
+    padding: 14px 28px; border-radius: 10px;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.07); }
+
+  /* FOOTER */
+  footer {
+    background: var(--indigo-deep);
+    padding: 48px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 18px; color: #fff;
+    display: flex; align-items: center; gap: 7px;
+    text-decoration: none;
+  }
+  .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+  .footer-links a { color: rgba(255,255,255,0.4); font-size: 13px; text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.8); }
+  .footer-copy { color: rgba(255,255,255,0.25); font-size: 12px; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .phone-frame { transform: none; }
+    .feature-section { grid-template-columns: 1fr; gap: 48px; }
+    .feature-section.flip { direction: ltr; }
+    .social-grid { grid-template-columns: 1fr; }
+    .social-numbers { gap: 32px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="nav-logo-dot"></span>
+    Fan League
+  </a>
+  <div class="nav-links">
+    <a href="#ai">AI insights</a>
+    <a href="#community">Community</a>
+    <a href="#missions">Missions</a>
+  </div>
+  <a href="#cta" class="nav-cta">Join free</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">
+        <span class="live-dot"></span>
+        Live · 238 fans online now
+      </div>
+      <h1 class="hero-h1">Your game,<br><span>amplified.</span></h1>
+      <p class="hero-p">Fan League brings AI insights, real community, and season-long missions into one place — so supporting your team is more than watching.</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">Get early access</a>
+        <a href="#ai" class="btn-ghost">
+          See how it works
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">50K+</div>
+          <div class="hero-stat-lbl">Fans in beta</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">12</div>
+          <div class="hero-stat-lbl">Leagues covered</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">4.9★</div>
+          <div class="hero-stat-lbl">App store rating</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="ph-notch"><div class="ph-notch-pill"></div></div>
+          <div class="ph-header">
+            <div class="ph-hicon">🤖</div>
+            <div><div class="ph-htitle">Fan League AI</div><div class="ph-hsub">Personalised insights</div></div>
+            <div class="ph-badge">LIVE</div>
+          </div>
+          <div class="ph-body">
+            <div class="ph-ai-card">
+              <div class="ph-ai-title">Match Recap · Arsenal 2–1 Chelsea</div>
+              <div class="ph-ai-sub">Saka's 89' winner sealed top-4. Saliba dominated — 94% duel rate, 8 clearances.</div>
+              <div class="ph-ai-tag">✦ AI Summary</div>
+            </div>
+            <div class="ph-slabel">Today's insights</div>
+            <div class="ph-card">
+              <div class="ph-ct">Haaland vs high press tonight</div>
+              <div class="ph-cs">1.4 shots on target per 45 min. Watch for the channel runs.</div>
+              <span class="ph-pill">📊 Tactical</span>
+            </div>
+            <div class="ph-card">
+              <div class="ph-ct">Mbappé to Real — confirmed</div>
+              <div class="ph-cs">Medical complete. Announced Friday AM local time.</div>
+              <span class="ph-pill ph-pill-red">🔴 Breaking</span>
+            </div>
+          </div>
+          <div class="ph-tabs">
+            <div class="ph-tab on"><span>🤖</span><small>AI</small></div>
+            <div class="ph-tab"><span>💬</span><small>Forum</small></div>
+            <div class="ph-tab"><span>🏆</span><small>Missions</small></div>
+            <div class="ph-tab"><span>👤</span><small>Profile</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item"><strong>Arsenal 2–1 Chelsea</strong> · FT <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>Saka</strong> voted MOTM by 73% of fans <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>238 fans</strong> in post-match chat right now <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>@ben_white2</strong> dropped into the forum <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>GW24 Trivia</strong> closes in 4h 12m <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>2,840 XP</strong> earned this week by Gold members <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>Arsenal 2–1 Chelsea</strong> · FT <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>Saka</strong> voted MOTM by 73% of fans <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>238 fans</strong> in post-match chat right now <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>@ben_white2</strong> dropped into the forum <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>GW24 Trivia</strong> closes in 4h 12m <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><strong>2,840 XP</strong> earned this week by Gold members <span class="ticker-sep">·</span></span>
+  </div>
+</div>
+
+<!-- FEATURE 1: AI -->
+<section id="ai" class="features">
+  <div class="feature-section">
+    <div>
+      <div class="feat-eyebrow">AI integration</div>
+      <h2 class="feat-h2">Insights that know<br>your <em>game</em></h2>
+      <p class="feat-p">Fan League's AI watches every match so you don't have to start from scratch. Get personalised recaps, tactical reads, and live news filtered to the clubs and players you actually care about.</p>
+      <div class="feat-bullets">
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">📋</div>
+          <div class="feat-bullet-text"><strong>Match recaps</strong> — key moments, player ratings, and tactical shifts explained in plain English.</div>
+        </div>
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">📰</div>
+          <div class="feat-bullet-text"><strong>News digest</strong> — transfers, injuries, and press conferences filtered to your clubs. No noise.</div>
+        </div>
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">📊</div>
+          <div class="feat-bullet-text"><strong>Sporting insights</strong> — data-driven angles on form, matchups, and trends before the whistle blows.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="feat-visual">
+        <div class="ph-ai-card">
+          <div class="ph-ai-title" style="font-size:12px">Match Recap · Arsenal 2–1 Chelsea</div>
+          <div class="ph-ai-sub" style="font-size:10px">Saka's 89' winner sealed a top-4 berth. Saliba dominated — 94% duel rate, 8 clearances. Trossard was quiet but crucial in the press.</div>
+          <div class="ph-ai-tag">✦ AI Summary</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:7px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.07)">
+            <div style="width:7px;height:7px;border-radius:50%;background:#6c69c8;margin-top:4px;flex-shrink:0"></div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.45">Haaland averages 1.4 shots on target per 45 min vs high press — watch for channel runs tonight.</div>
+          </div>
+          <div style="display:flex;gap:7px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.07)">
+            <div style="width:7px;height:7px;border-radius:50%;background:#c03030;margin-top:4px;flex-shrink:0"></div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.45">City's last 4 away clean sheets all had Rodri starting. He's benched today.</div>
+          </div>
+          <div style="display:flex;gap:7px;align-items:flex-start;padding:8px 0">
+            <div style="width:7px;height:7px;border-radius:50%;background:#2a8a2a;margin-top:4px;flex-shrink:0"></div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.45">Your team scores 68% of goals from set pieces. That's top 3 in the league.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FEATURE 2: Community -->
+<section id="community" class="features">
+  <div class="feature-section flip">
+    <div>
+      <div class="feat-eyebrow">Community forum</div>
+      <h2 class="feat-h2">The post-match pub,<br><em>on your phone</em></h2>
+      <p class="feat-p">Real fans, real reactions — and sometimes the players themselves. Fan League's forum brings post-match chats, live polls, and athlete drop-ins into one place.</p>
+      <div class="feat-bullets">
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">📊</div>
+          <div class="feat-bullet-text"><strong>Fan polls</strong> — vote on MOTM, transfer targets, and big decisions. See how the crowd splits in real time.</div>
+        </div>
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">💬</div>
+          <div class="feat-bullet-text"><strong>Post-match chats</strong> — organised by club and match, so you're always in the right room.</div>
+        </div>
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">🏅</div>
+          <div class="feat-bullet-text"><strong>Athlete drop-ins</strong> — verified players jump in after games. Ask them anything.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="feat-visual">
+        <div class="forum-stat-row">
+          <div class="forum-stat"><div class="forum-stat-num">73%</div><div class="forum-stat-lbl">Saka MOTM poll</div></div>
+          <div class="forum-stat"><div class="forum-stat-num">238</div><div class="forum-stat-lbl">Online now</div></div>
+          <div class="forum-stat"><div class="forum-stat-num">4</div><div class="forum-stat-lbl">Athlete drop-ins</div></div>
+        </div>
+        <div class="forum-bubble">
+          <div class="fb-header">
+            <div class="fb-av" style="background:rgba(74,71,163,0.4);color:#a0a0e8">JK</div>
+            <div class="fb-name">jackk17</div>
+            <div class="fb-time">2m ago</div>
+          </div>
+          <div class="fb-text">That Saka run in the 89th was absolutely insane. Absolute baller 🔥</div>
+          <div class="fb-reacts"><span class="fb-rx">🔥 42</span><span class="fb-rx">💬 Reply</span></div>
+        </div>
+        <div class="forum-bubble athlete">
+          <div class="fb-header">
+            <div class="fb-av" style="background:#4a47a3;color:#fff">🏅</div>
+            <div class="fb-name athlete">Athlete · @ben_white2</div>
+            <div class="fb-time">1m ago</div>
+          </div>
+          <div class="fb-text">The fans were unreal today — couldn't hear myself think in the 90th. Thank you 🙏</div>
+          <div class="fb-reacts"><span class="fb-rx">❤️ 891</span><span class="fb-rx accent">Reply ↗</span></div>
+        </div>
+        <div class="forum-bubble">
+          <div class="fb-header">
+            <div class="fb-av" style="background:rgba(192,48,96,0.2);color:#d06090">RP</div>
+            <div class="fb-name">rose_poll</div>
+            <div class="fb-time">just now</div>
+          </div>
+          <div class="fb-text">Poll: who scores the first goal vs Spurs next week?</div>
+          <div class="fb-reacts"><span class="fb-rx">📊 Vote</span><span class="fb-rx">💬 14 replies</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FEATURE 3: Missions -->
+<section id="missions" class="features">
+  <div class="feature-section">
+    <div>
+      <div class="feat-eyebrow">Season missions</div>
+      <h2 class="feat-h2">Every matchday<br>is a <em>chance to earn</em></h2>
+      <p class="feat-p">Fan League turns watching into playing. Predict outcomes, win trivia rounds, and rack up XP all season — then redeem for real rewards.</p>
+      <div class="feat-bullets">
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">🎯</div>
+          <div class="feat-bullet-text"><strong>Predict match outcomes</strong> — call the result, first scorer, or both. The harder the call, the more XP.</div>
+        </div>
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">🧠</div>
+          <div class="feat-bullet-text"><strong>Weekly trivia</strong> — five questions every gameweek. Compete on the leaderboard against fans of your club.</div>
+        </div>
+        <div class="feat-bullet">
+          <div class="feat-bullet-dot">🎁</div>
+          <div class="feat-bullet-text"><strong>Redeem points</strong> — discount codes, priority access, merchandise, and match tickets. Real value, real fans.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="feat-visual">
+        <div class="mission-pts-banner">
+          <div>
+            <div class="m-pts-num">2,840</div>
+            <div class="m-pts-lbl">Fan XP this season</div>
+          </div>
+          <div class="m-tier">
+            <div class="m-tier-name">Gold Tier</div>
+            <div class="m-tier-sub">1,160 XP to Platinum</div>
+            <div class="m-xpbar"><div class="m-xpfill" style="width:71%"></div></div>
+          </div>
+        </div>
+        <div class="mission-card-visual">
+          <div class="mc-head" style="background:#4a47a3"><div class="mc-title">Predict Saturday's result</div><div class="mc-pts">+200 XP</div></div>
+          <div class="mc-body">
+            <div class="mc-sub">Arsenal vs Brighton · Closes 12:30pm Sat</div>
+            <div class="mc-pbar"><div class="mc-pfill" style="width:0%;background:#7b78d8"></div></div>
+            <div class="mc-action" style="color:#a0a0e8">Tap to predict →</div>
+          </div>
+        </div>
+        <div class="mission-card-visual">
+          <div class="mc-head" style="background:#3a6a3a"><div class="mc-title">Weekly trivia — Round 24</div><div class="mc-pts">+150 XP</div></div>
+          <div class="mc-body">
+            <div class="mc-sub">5 questions · Est. 2 min</div>
+            <div class="mc-pbar"><div class="mc-pfill" style="width:60%;background:#2a8a2a"></div></div>
+            <div class="mc-action" style="color:#70c070">3/5 complete · Resume →</div>
+          </div>
+        </div>
+        <div class="mission-card-visual">
+          <div class="mc-head" style="background:#7a5a00"><div class="mc-title">Redeem your points</div><div class="mc-pts">🛒 Shop open</div></div>
+          <div class="mc-body">
+            <div class="mc-sub">800 XP = 10% off match tickets</div>
+            <div class="mc-action" style="color:#f0b429">2,840 XP available · Redeem →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-section">
+  <div class="social-eyebrow">What fans are saying</div>
+  <h2 class="social-h2">Built for fans who<br><span>live and breathe</span> their club</h2>
+  <div class="social-grid">
+    <div class="social-card">
+      <div class="social-quote">"The AI recap after the north London derby was better than anything I read in the press. Had all the stats I actually wanted."</div>
+      <div class="social-author">
+        <div class="social-av" style="background:rgba(74,71,163,0.4);color:#a0a0e8">MK</div>
+        <div>
+          <div class="social-name">Marc K.</div>
+          <div class="social-handle">@marckcfc · Arsenal fan</div>
+        </div>
+      </div>
+    </div>
+    <div class="social-card">
+      <div class="social-quote">"When Ben White dropped into the post-match chat — that's not something you get anywhere else. I was starstruck."</div>
+      <div class="social-author">
+        <div class="social-av" style="background:rgba(192,48,96,0.2);color:#d06090">SR</div>
+        <div>
+          <div class="social-name">Sophie R.</div>
+          <div class="social-handle">@sophiearsenal · Season ticket holder</div>
+        </div>
+      </div>
+    </div>
+    <div class="social-card">
+      <div class="social-quote">"I got 10% off my away end tickets through the XP store. The missions actually make you feel rewarded for being a real fan."</div>
+      <div class="social-author">
+        <div class="social-av" style="background:rgba(40,130,40,0.2);color:#70c070">TJ</div>
+        <div>
+          <div class="social-name">Tom J.</div>
+          <div class="social-handle">@tj_gunner · Gold tier member</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="social-numbers">
+    <div>
+      <div class="social-num">50K+</div>
+      <div class="social-num-lbl">Fans in beta</div>
+    </div>
+    <div>
+      <div class="social-num">98%</div>
+      <div class="social-num-lbl">Would recommend</div>
+    </div>
+    <div>
+      <div class="social-num">4.9★</div>
+      <div class="social-num-lbl">App store rating</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-h2">Your club deserves better than a highlights reel.</h2>
+    <p class="cta-p">Join 50,000 fans already on Fan League. Free to join, always.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-white">Get early access</a>
+      <a href="#ai" class="btn-outline-white">See features</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">
+    <span style="width:8px;height:8px;background:#6c69c8;border-radius:50%;display:inline-block"></span>
+    Fan League
+  </a>
+  <div class="footer-links">
+    <a href="#">AI insights</a>
+    <a href="#">Community</a>
+    <a href="#">Missions</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+  <div class="footer-copy">© 2026 Fan League. Built for fans.</div>
+</footer>
+
+</body>
+</html>
